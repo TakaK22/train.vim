@@ -1,45 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-scriptencoding utf-8
-
-" import vital modules
-let s:V = vital#of('vital')
-let s:HTTP = s:V.import('Web.HTTP')
-let s:JSON = s:V.import('Web.JSON')
-let s:TABLE = s:V.import('Text.Table')
-let s:DATE = s:V.import('DateTime')
-
-function! train#run() abort
-    let l:response = s:HTTP.get("https://rti-giken.jp/fhc/api/train_tetsudo/delay.json")
-
-    if l:response.status !=  200
-        echohl ErrorMsg | 'status:' .. l:response.status 'response:' .. l:response.content
-        return
-    endif
-
-    let l:table = s:TABLE.new({
-                \ 'columns': [{}, {}, {}],
-                \ 'header': ['路線名', '鉄道', '更新時間']
-                \ })
-
-    let l:content = s:JSON.decode(l:response.content)
-
-    for c in l:content
-        call l:table.add_row([
-                    \ c.name, 
-                    \ c.company, 
-                    \ s:DATE.from_unix_time(c.lastupdate_gmt).format('%F %T')
-                    \ ])
-    endfor
-
-    call popup_clear()
-    call popup_create(l:table.stringify(), {
-                \ 'moved': 'any',
-                \ 'height': str2nr(len(l:content)),
-                \ })
-endfunction
-
 command! -nargs=0 TrainLateInfo call train#run()
 
 let &cpo = s:save_cpo
