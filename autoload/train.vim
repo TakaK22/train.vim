@@ -24,8 +24,8 @@ function! train#run() abort
 
     for c in l:content
         call l:table.add_row([
-                    \ c.name, 
-                    \ c.company, 
+                    \ c.name,
+                    \ c.company,
                     \ s:DATE.from_unix_time(c.lastupdate_gmt).format('%F %T')
                     \ ])
     endfor
