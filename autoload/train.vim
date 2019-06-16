@@ -3,7 +3,6 @@ scriptencoding utf-8
 " import vital modules
 let s:V = vital#of('vital')
 let s:HTTP = s:V.import('Web.HTTP')
-let s:JSON = s:V.import('Web.JSON')
 let s:TABLE = s:V.import('Text.Table')
 let s:DATE = s:V.import('DateTime')
 
@@ -20,7 +19,7 @@ function! train#run() abort
                 \ 'header': ['路線名', '鉄道', '更新時間']
                 \ })
 
-    let l:content = s:JSON.decode(l:response.content)
+    let l:content = json_decode(l:response.content)
 
     for c in l:content
         call l:table.add_row([
