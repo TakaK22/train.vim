@@ -10,8 +10,10 @@ let s:DATE = s:V.import('DateTime')
 function! train#run() abort
     let l:response = s:HTTP.get("https://rti-giken.jp/fhc/api/train_tetsudo/delay.json")
 
-    if l:response.status !=  200
-        echohl ErrorMsg | 'status:' .. l:response.status 'response:' .. l:response.content
+    if l:response.status != 200
+        echohl ErrorMsg
+        echo 'status:' .. l:response.status 'response:' .. l:response.content
+        echohl None
         return
     endif
 
