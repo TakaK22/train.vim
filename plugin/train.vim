@@ -1,11 +1,11 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if exists('g:loaded_train_late_info')
+if exists('g:loaded_train')
     finish
 endif
 
-let g:loaded_train_late_info = 1
+let g:loaded_train = 1
 
 command! -nargs=0 TrainLateInfo call train#run()
 
