@@ -1,7 +1,7 @@
 scriptencoding utf-8
 
 " import vital modules
-let s:V = vital#of('vital')
+let s:V = vital#train#new()
 let s:HTTP = s:V.import('Web.HTTP')
 let s:JSON = s:V.import('Web.JSON')
 let s:TABLE = s:V.import('Text.Table')
