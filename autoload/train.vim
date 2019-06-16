@@ -6,6 +6,8 @@ let s:HTTP = s:V.import('Web.HTTP')
 let s:TABLE = s:V.import('Text.Table')
 let s:DATE = s:V.import('DateTime')
 
+let s:last_popup = 0
+
 function! train#run() abort
     let l:response = s:HTTP.get("https://rti-giken.jp/fhc/api/train_tetsudo/delay.json")
 
@@ -31,8 +33,8 @@ function! train#run() abort
                     \ ])
     endfor
 
-    call popup_clear()
-    call popup_create(l:table.stringify(), {
+    call popup_close(s:last_popup)
+    let s:last_popup = popup_create(l:table.stringify(), {
                 \ 'moved': 'any',
                 \ 'height': str2nr(len(l:content)),
                 \ })
