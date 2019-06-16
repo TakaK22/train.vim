@@ -1,4 +1,4 @@
-#train.vim
+# train.vim
 電車遅延情報をただ表示するプラグイン
 
 ![](screenshot.png)
