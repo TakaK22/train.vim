@@ -5,3 +5,5 @@ Web.JSON
 Web.URI
 Web.HTML
 Web.HTTP
+Text.Table
+DateTime
