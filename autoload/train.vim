@@ -30,7 +30,6 @@ function! train#run() abort
                     \ ])
     endfor
 
-    call popup_clear()
     call popup_create(l:table.stringify(), {
                 \ 'moved': 'any',
                 \ 'height': str2nr(len(l:content)),
