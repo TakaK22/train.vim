@@ -9,7 +9,8 @@ let s:HTML = s:V.import('Web.HTML')
 
 let s:last_popup = 0
 
-function! train#run() abort
+" train late info
+function! train#late_info() abort
     let l:response = s:HTTP.get("https://rti-giken.jp/fhc/api/train_tetsudo/delay.json")
 
     if l:response.status != 200
@@ -41,8 +42,19 @@ function! train#run() abort
                 \ })
 endfunction
 
-function! train#route_search(from, to) abort
-    let l:url = 'https://transit.yahoo.co.jp/search/result?from=' .. a:from .. '&to=' .. a:to .. ''
+" train route search
+function! train#route_search(...) abort
+    if a:0 < 2
+        echohl ErrorMsg
+        echo '引数が不足しています。'
+        echohl None
+        return
+    endif
+
+    let l:from = a:1
+    let l:to = a:2
+
+    let l:url = 'https://transit.yahoo.co.jp/search/result?flatlon=&fromgid=&from=' .. l:from .. '&tlatlon=&togid=&to=' .. l:to .. '&viacode=&via=&viacode=&via=&viacode=&via=&type=1&ticket=ic&expkind=1&ws=3&s=0&al=1&shin=1&ex=1&hb=1&lb=1&sr=1&kw=' .. l:to
     let l:response = s:HTML.parseURL(l:url)
 
     let l:title =  l:response.find('title').value()
@@ -88,10 +100,18 @@ function! train#route_search(from, to) abort
                         let take_time = attr_time[attr_time_len-1].value()
 
                         " 料金
-                        let fee = attr_fare[0].value()
+                        if type(attr_fare[0]) == type({})
+                            let fee = attr_fare[0].value()
+                        else
+                            let fee = attr_fare[0]
+                        endif
 
                         " 乗り換え回数
-                        let transfer = attr_transfer[0] .. attr_transfer[1].value()
+                        if len(attr_transfer) == 1
+                            let transfer = attr_transfer[0]
+                        else
+                            let transfer = attr_transfer[0] .. attr_transfer[1].value()
+                        endif
 
                         " 料金の安い順
                         let priority = ""
@@ -112,6 +132,7 @@ function! train#route_search(from, to) abort
         endfor
     endfor
 
+    call popup_close(s:last_popup)
     let s:last_popup = popup_create(l:table.stringify(), {
                 \ 'moved': 'any',
                 \ 'title': l:title,
