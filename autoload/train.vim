@@ -13,7 +13,11 @@ let s:result_window = "RESULT"
 
 " create window
 " when window is already created then use it
-function! s:create_window(content) abort
+function! s:create_window(...) abort
+    if a:0 < 1
+        return
+    endif
+
     let s:current_window = bufnr("%")
 
     if !bufexists(s:result_window)
@@ -29,7 +33,12 @@ function! s:create_window(content) abort
     endif
 
     silent % d _
-    call setline(1, a:content)
+
+    let l:idx = 1
+    for content in a:000
+        call setbufline(bufname("%"), l:idx, content)
+        let l:idx += 1
+    endfor
 endfunction
 
 " focus window by buffer id
@@ -174,7 +183,7 @@ function! train#route_search(...) abort
                     \ 'title': l:title,
                     \ })
     else
-        call s:create_window(l:table.stringify())
+        call s:create_window(l:title, l:table.stringify())
         call s:focus_window(bufnr(s:current_window))
     endif
 endfunction
