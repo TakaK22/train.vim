@@ -8,6 +8,36 @@ let s:DATE = s:V.import('DateTime')
 let s:HTML = s:V.import('Web.HTML')
 
 let s:last_popup = 0
+let s:current_window = 0
+let s:result_window = "RESULT"
+
+" create window
+" when window is already created then use it
+function! s:create_window(content) abort
+    let s:current_window = bufnr("%")
+
+    if !bufexists(s:result_window)
+        " create new buffer
+        execute "new" s:result_window
+    else
+        " focus translate window
+        let bid = bufnr(s:result_window)
+        if empty(win_findbuf(bid))
+            execute "new | e" s:result_window
+        endif
+        call s:focus_window(bid)
+    endif
+
+    silent % d _
+    call setline(1, a:content)
+endfunction
+
+" focus window by buffer id
+function! s:focus_window(bid) abort
+    if !empty(win_findbuf(a:bid))
+        call win_gotoid(win_findbuf(a:bid)[0])
+    endif
+endfunction
 
 " train late info
 function! train#late_info() abort
@@ -35,11 +65,16 @@ function! train#late_info() abort
                     \ ])
     endfor
 
-    call popup_close(s:last_popup)
-    let s:last_popup = popup_create(l:table.stringify(), {
-                \ 'moved': 'any',
-                \ 'height': str2nr(len(l:content)),
-                \ })
+    if has("patch-8.1.1561")
+        call popup_close(s:last_popup)
+        let s:last_popup = popup_create(l:table.stringify(), {
+                    \ 'moved': 'any',
+                    \ 'height': str2nr(len(l:content)),
+                    \ })
+    else
+        call s:create_window(l:table.stringify())
+        call s:focus_window(bufnr(s:current_window))
+    endif
 endfunction
 
 " train route search
@@ -132,9 +167,14 @@ function! train#route_search(...) abort
         endfor
     endfor
 
-    call popup_close(s:last_popup)
-    let s:last_popup = popup_create(l:table.stringify(), {
-                \ 'moved': 'any',
-                \ 'title': l:title,
-                \ })
+    if has("patch-8.1.1561")
+        call popup_close(s:last_popup)
+        let s:last_popup = popup_create(l:table.stringify(), {
+                    \ 'moved': 'any',
+                    \ 'title': l:title,
+                    \ })
+    else
+        call s:create_window(l:table.stringify())
+        call s:focus_window(bufnr(s:current_window))
+    endif
 endfunction
