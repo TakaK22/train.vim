@@ -1,10 +1,13 @@
 # train.vim
-電車遅延情報をただ表示するプラグイン
+電車情報プラグイン
 
 ![](screenshots/late_info.png)
 
 ![](screenshots/train_route_search.png)
 
+# 機能
+- 遅延情報
+- 乗り換えルート検索
 
 # 必須
 - curl
