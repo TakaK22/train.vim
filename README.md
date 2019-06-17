@@ -1,7 +1,10 @@
 # train.vim
 電車遅延情報をただ表示するプラグイン
 
-![](screenshot.png)
+![](screenshots/late_info.png)
+
+![](screenshots/train_route_search.png)
+
 
 # 必須
 - curl
@@ -23,5 +26,9 @@ $ git clone https://github.com/skanehira/train.vim
 
 # 使い方
 ```vim
+" 遅延情報表示
 :TrainLateInfo
+
+" ルート検索
+:TrainSearchRoute 秋葉原 東京
 ```
