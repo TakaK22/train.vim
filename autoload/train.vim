@@ -32,6 +32,7 @@ function! s:create_window(...) abort
         call s:focus_window(bid)
     endif
 
+    setlocal buftype=nofile
     silent % d _
 
     let l:idx = 1
